@@ -1,0 +1,1 @@
+let interval = setInterval(function() { console.log('Nice'); },1000);
