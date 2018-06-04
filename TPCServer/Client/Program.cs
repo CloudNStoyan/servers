@@ -29,9 +29,11 @@ namespace Client
                         {
                             string request = ReadRequest(stream);
 
-                            Console.WriteLine(request);
-
                             string[] tokens = request.Split(' ');
+
+                            Console.WriteLine(request.Split('\n')[0]);
+
+                            string postVariables = string.Empty;
 
                             string page = tokens[1];
 
@@ -42,6 +44,8 @@ namespace Client
                             else if (page == "/cats")
                             {
                                 page = @"\cats.html";
+                                postVariables = request.Split('\n')[request.Split('\n').Length - 1];
+                                Console.WriteLine(postVariables + "|");
                             }
 
                             string fileName = @"C:\Projects\TPCServerStuff\TPCServer\Website" + page;
@@ -54,8 +58,19 @@ namespace Client
                                 var fileContents = File.ReadAllBytes(fileName);
 
                                 writer.Write("HTTP/1.1 200 OK\r\n\r\n");
-                                writer.Write(Encoding.UTF8.GetString(fileContents));
-                                writer.Flush();
+                                if (page == @"\cats.html")
+                                {
+                                    int number1 = int.Parse(postVariables.Split('&')[0]);
+                                    int number2 = int.Parse(postVariables.Split('&')[1]);
+
+                                    writer.Write(Encoding.UTF8.GetString(fileContents).Replace("DefaultValue0",number1 + number2 + ""));
+                                    writer.Flush();
+                                }
+                                else
+                                {
+                                    writer.Write(Encoding.UTF8.GetString(fileContents));
+                                    writer.Flush();
+                                }
 
                             }
                             else
