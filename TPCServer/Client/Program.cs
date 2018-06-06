@@ -45,7 +45,6 @@ namespace Client
                             {
                                 page = @"\cats.html";
                                 postVariables = request.Split('\n')[request.Split('\n').Length - 1];
-                                Console.WriteLine(postVariables + "|");
                             }
 
                             string fileName = @"C:\Projects\TPCServerStuff\TPCServer\Website" + page;
@@ -60,10 +59,9 @@ namespace Client
                                 writer.Write("HTTP/1.1 200 OK\r\n\r\n");
                                 if (page == @"\cats.html")
                                 {
-                                    int number1 = int.Parse(postVariables.Split('&')[0]);
-                                    int number2 = int.Parse(postVariables.Split('&')[1]);
-
-                                    writer.Write(Encoding.UTF8.GetString(fileContents).Replace("DefaultValue0",number1 + number2 + ""));
+                                    int number1 = int.Parse(postVariables.Split('&')[0].Split('=')[1]);
+                                    int number2 = int.Parse(postVariables.Split('&')[1].Split('=')[1]);
+                                    writer.Write(Encoding.UTF8.GetString(fileContents).Replace("DefaultValue0",(number1 + number2).ToString()));
                                     writer.Flush();
                                 }
                                 else
